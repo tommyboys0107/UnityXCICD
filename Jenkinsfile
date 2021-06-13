@@ -4,7 +4,7 @@ pipeline {
     stage('Initialize') {
       steps {
         echo 'Start build pipeline. Clean assets and artifacts folder.'
-        dir(path: '${env.WORKSPACE}/Assets') {
+        dir(path: '"${WORKSPACE}"/Assets') {
           sh 'git clean -f -d -x'
         }
 
