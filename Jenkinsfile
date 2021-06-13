@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Initialize') {
       steps {
-        echo 'Start build pipeline. Clean assets and artifacts folder. ${WORKSPACE}}'
+        echo 'Start build pipeline. Clean assets and artifacts folder. ${WORKSPACE} ${env.WORKSPACE} "${WORKSPACE}" ${TEST}'
         dir(path: 'Assets') {
           sh 'git clean -f -d -x'
         }
@@ -11,5 +11,8 @@ pipeline {
       }
     }
 
+  }
+  environment {
+    TEST = 'test'
   }
 }
