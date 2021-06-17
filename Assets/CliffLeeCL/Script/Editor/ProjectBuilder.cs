@@ -17,7 +17,7 @@ namespace CliffLeeCL
         public static void BuildProject()
         {
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-            string outputPath = "";
+            BuildSetting buildSetting = new BuildSetting();
 
             // Handle command line arguments.
             if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
@@ -25,42 +25,41 @@ namespace CliffLeeCL
                 Dictionary<string, string> commandLineArgumentToValue = ParseCommandLineArgument();
 
                 if (commandLineArgumentToValue.ContainsKey("-outputPath"))
-                    outputPath = commandLineArgumentToValue["-outputPath"];
+                    buildSetting.outputPath = commandLineArgumentToValue["-outputPath"];
+                if (commandLineArgumentToValue.ContainsKey("-defineSymbolConfig"))
+                    buildSetting.symbolConfig = (BuildSetting.DefineSymbolConfig)Enum.Parse(typeof(BuildSetting.DefineSymbolConfig), commandLineArgumentToValue["-defineSymbolConfig"]);
             }
-
-            BuildProject(target, outputPath);
+            BuildProject(target, buildSetting);
         }
 
         [MenuItem("Cliff Lee CL/Build project Windowsx64 _F6", false, 1)]
         public static void BuildProjectWindows64()
         {
-            BuildProject(BuildTarget.StandaloneWindows64);
+            BuildProject(BuildTarget.StandaloneWindows64, new BuildSetting());
         }
 
         [MenuItem("Cliff Lee CL/Build project WebGL _F7", false, 2)]
         public static void BuildProjectWebGL()
         {
-            BuildProject(BuildTarget.WebGL);
+            BuildProject(BuildTarget.WebGL, new BuildSetting());
         }
 
         /// <summary>
         /// Build Unity project.
         /// </summary>
         /// <param name="buildTarget">Target platform.</param>
-        /// <param name="outputPath">The output folder path.</param>
-        static void BuildProject(BuildTarget buildTarget, string outputPath = "")
+        /// <param name="buildSetting">The custom build setting.</param>
+        static void BuildProject(BuildTarget buildTarget, BuildSetting buildSetting)
         {
             BuildReport buildReport;
-
             BuildPlayerOptions buildPlayerOption = new BuildPlayerOptions
             {
                 scenes = EditorBuildSettings.scenes.Where((s) => s.enabled).Select((s) => s.path).ToArray(),
-                locationPathName = GetBuildPath(buildTarget, outputPath),
+                locationPathName = GetBuildPath(buildTarget, buildSetting.outputPath),
                 target = buildTarget,
                 options = BuildOptions.None
             };
 
-            Debug.Log("Build project at: " + buildPlayerOption.locationPathName);
             buildReport = BuildPipeline.BuildPlayer(buildPlayerOption);
             if (buildReport.summary.result == BuildResult.Succeeded)
             {
@@ -74,20 +73,19 @@ namespace CliffLeeCL
                     EditorApplication.Exit(1);
                 throw new Exception("[ProjectBuilder] Build Failed: Time:" + buildReport.summary.totalTime + " Total Errors:" + buildReport.summary.totalErrors);
             }
+            Debug.Log(buildSetting);
+            Debug.Log("Build project at: " + buildPlayerOption.locationPathName);
         }
 
         static string GetBuildPath(BuildTarget buildTarget, string outputPath = "")
         {
             string desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
             string fileName = PlayerSettings.productName + GetFileExtension(buildTarget);
-            string timeStamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm");
+            string timeStamp = DateTime.Now.ToString("yyyyMMdd-HH-mm");
             string buildPath;
 
             outputPath = (outputPath == "") ? desktopPath : outputPath;
-            buildPath = Path.Combine(outputPath, PlayerSettings.productName);
-            buildPath = Path.Combine(buildPath, buildTarget.ToString());
-            buildPath = Path.Combine(buildPath, timeStamp);
-            buildPath = Path.Combine(buildPath, fileName);
+            buildPath = Path.Combine(outputPath, PlayerSettings.productName, $"{buildTarget}_{timeStamp}", fileName);
             buildPath = buildPath.Replace(@"\", @"\\");
 
             return buildPath;
@@ -97,10 +95,7 @@ namespace CliffLeeCL
         /// Parse command line argument and extract custom command line arguments.
         /// </summary>
         /// -outputPath <pathName>: Set output path (directory) for executables.
-        /// -paramDataConfig <configName>: Set config for paramData. (valid input: Debug, Release)
-        /// -buildGame: Build executables.
-        /// -buildBundle: Build asset bundles.
-        /// -buildAndroidAppBundle: Build .aab instead of .apk.
+        /// -defineSymbolConfig <configName>: Set config for define symbol.
         /// <returns>Dictionary about custom command line arguments.</returns>
         static Dictionary<string, string> ParseCommandLineArgument()
         {
@@ -144,6 +139,28 @@ namespace CliffLeeCL
                     Debug.LogError("No corresponding extension!");
                     return "";
             }
+        }
+    }
+
+    public class BuildSetting
+    {
+        public enum DefineSymbolConfig
+        {
+            Debug,
+            Release
+        }
+
+        public readonly Dictionary<DefineSymbolConfig, string> symbolConfigToDefineSymbol = new Dictionary<DefineSymbolConfig, string> { 
+            [DefineSymbolConfig.Debug] = "Debug;",
+            [DefineSymbolConfig.Release] = "Release;"
+        };
+
+        public string outputPath = "";
+        public DefineSymbolConfig symbolConfig = DefineSymbolConfig.Debug;
+
+        public override string ToString()
+        {
+            return $"{nameof(BuildSetting)}: symbolConfig={symbolConfig}, ouputPath={outputPath}";
         }
     }
 }
