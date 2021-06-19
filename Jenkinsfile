@@ -20,15 +20,15 @@ pipeline {
         echo "Build ${SYMBOL_CONFIG} ${BUILD_TARGET} with Unity (${UNITY_PATH})"
         echo "Project path: ${UNITY_PROJECT_DIR}"
         echo "Output path: ${UNITY_OUTPUT_PATH}"
-        echo "Workspace path: ${WORK_SPACE}"
+        echo "Workspace path: ${WORKSPACE}"
         sh "${UNITY_PATH} \
-                                                -projectPath ${UNITY_PROJECT_DIR} \
-                                                -buildTarget ${BUILD_TARGET}\
-                                                -executeMethod ${UNITY_BUILD_METHOD} \
-                                                -logFile - \
-                                                -quit -batchmode -nographics \
-                                                -outputPath ${UNITY_OUTPUT_PATH} \
-                                                -defineSymbolConfig ${SYMBOL_CONFIG}"
+                                                        -projectPath ${UNITY_PROJECT_DIR} \
+                                                        -buildTarget ${BUILD_TARGET}\
+                                                        -executeMethod ${UNITY_BUILD_METHOD} \
+                                                        -logFile - \
+                                                        -quit -batchmode -nographics \
+                                                        -outputPath ${UNITY_OUTPUT_PATH} \
+                                                        -defineSymbolConfig ${SYMBOL_CONFIG}"
       }
     }
 
