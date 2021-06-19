@@ -14,14 +14,16 @@ pipeline {
     stage('Build Win x64') {
       steps {
         echo "Build Win x64 with Unity (${UNITY_PATH})"
+        echo 'Project path: ${UNITY_PROJECT_DIR}'
+        echo 'Output path: ${UNITY_OUTPUT_PATH}'
         sh "${UNITY_PATH} \
-                   -projectPath ${UNITY_PROJECT_DIR} \
-                   -buildTarget Win64 \
-                   -executeMethod ${UNITY_BUILD_METHOD} \
-                   -logFile ${UNITY_OUTPUT_PATH}/UnityBuildLog.txt \
-                   -quit -batchmode -nographics \
-                   -outputPath ${UNITY_OUTPUT_PATH} \
-                   -defineSymbolConfig Release"
+                           -projectPath ${UNITY_PROJECT_DIR} \
+                           -buildTarget Win64 \
+                           -executeMethod ${UNITY_BUILD_METHOD} \
+                           -logFile ${UNITY_OUTPUT_PATH}/UnityBuildLog.txt \
+                           -quit -batchmode -nographics \
+                           -outputPath ${UNITY_OUTPUT_PATH} \
+                           -defineSymbolConfig Release"
       }
     }
 
