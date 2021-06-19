@@ -17,18 +17,18 @@ pipeline {
         BUILD_TARGET = 'Win64'
       }
       steps {
-        echo "Build Win x64 with Unity (${UNITY_PATH})"
-        echo "Build target: ${BUILD_TARGET}, Symbol config: ${SYMBOL_CONFIG}"
+        echo "Build ${SYMBOL_CONFIG} ${BUILD_TARGET} with Unity (${UNITY_PATH})"
         echo "Project path: ${UNITY_PROJECT_DIR}"
         echo "Output path: ${UNITY_OUTPUT_PATH}"
+        echo "Workspace path: ${WORK_SPACE}"
         sh "${UNITY_PATH} \
-                        -projectPath ${UNITY_PROJECT_DIR} \
-                        -buildTarget ${BUILD_TARGET}\
-                        -executeMethod ${UNITY_BUILD_METHOD} \
-                        -logFile - \
-                        -quit -batchmode -nographics \
-                        -outputPath ${UNITY_OUTPUT_PATH} \
-                        -defineSymbolConfig ${SYMBOL_CONFIG}"
+                                                -projectPath ${UNITY_PROJECT_DIR} \
+                                                -buildTarget ${BUILD_TARGET}\
+                                                -executeMethod ${UNITY_BUILD_METHOD} \
+                                                -logFile - \
+                                                -quit -batchmode -nographics \
+                                                -outputPath ${UNITY_OUTPUT_PATH} \
+                                                -defineSymbolConfig ${SYMBOL_CONFIG}"
       }
     }
 
