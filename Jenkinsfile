@@ -17,13 +17,14 @@ pipeline {
           environment {
             SYMBOL_CONFIG = 'Release'
             BUILD_TARGET = 'Win64'
+            UNITY_BUILD_METHOD = 'CliffLeeCL.ProjectBuilder.BuildProject'
           }
           steps {
             echo "Build ${SYMBOL_CONFIG} ${BUILD_TARGET} with Unity (${UNITY_PATH})"
             echo "Project path: ${UNITY_PROJECT_DIR}"
-            echo "Output path: ${UNITY_OUTPUT_PATH}"
+            echo "Output path: ${OUTPUT_PATH}"
             echo "Workspace path: ${WORK_SPACE}"
-            sh "${UNITY_PATH} -projectPath ${UNITY_PROJECT_DIR} -buildTarget ${BUILD_TARGET} -executeMethod ${UNITY_BUILD_METHOD} -logFile - -quit -batchmode -nographics -outputPath ${UNITY_OUTPUT_PATH} -defineSymbolConfig ${SYMBOL_CONFIG}"
+            sh "${UNITY_PATH} -projectPath ${UNITY_PROJECT_DIR} -buildTarget ${BUILD_TARGET} -executeMethod ${UNITY_BUILD_METHOD} -logFile - -quit -batchmode -nographics -outputPath ${OUTPUT_PATH} -defineSymbolConfig ${SYMBOL_CONFIG}"
           }
         }
 
@@ -32,8 +33,8 @@ pipeline {
             CPD_PATH = 'C:/CliffLeeCL/CodeAnalysis/pmd-bin-6.35.0/bin/cpd.bat'
           }
           steps {
-            sh "mkdir -p ${UNITY_OUTPUT_PATH}/Analysis"
-            sh "${CPD_PATH} --minimum-tokens 50 --language cs --failOnViolation false --format xml --files ${WORK_SPACE}/Assets/CliffLeeCL/Script > ${UNITY_OUTPUT_PATH}/Analysis/cpd.xml"
+            sh "mkdir -p ${OUTPUT_PATH}/Analysis"
+            sh "${CPD_PATH} --minimum-tokens 50 --language cs --failOnViolation false --format xml --files ${WORK_SPACE}/Assets/CliffLeeCL/Script > ${OUTPUT_PATH}/Analysis/cpd.xml"
             recordIssues(enabledForFailure: true, tool: cpd(pattern: '**/cpd.xml'))
           }
         }
@@ -50,9 +51,8 @@ pipeline {
   }
   environment {
     WORK_SPACE = "${WORKSPACE}".replace("\\", "/")
+    OUTPUT_PATH = "${WORK_SPACE}/Artifacts"
     UNITY_PATH = '"C:/Program Files/Unity/Hub/Editor/2020.3.11f1/Editor/Unity.exe"'
     UNITY_PROJECT_DIR = "${WORK_SPACE}"
-    UNITY_BUILD_METHOD = 'CliffLeeCL.ProjectBuilder.BuildProject'
-    UNITY_OUTPUT_PATH = "${WORK_SPACE}/Artifacts"
   }
 }
