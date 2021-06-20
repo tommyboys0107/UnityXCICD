@@ -3,8 +3,12 @@ pipeline {
   stages {
     stage('Initialize') {
       steps {
-        echo "Clean assets folder. (${WORKSPACE}/Assets)"
-        dir(path: "${WORKSPACE}") {
+        echo "Clean assets and artifacts folder. (${WORKSPACE}/Assets, Artifacts)"
+        dir(path: "${WORKSPACE}/Assets") {
+          sh 'git clean -f -d -x'
+        }
+
+        dir(path: "${WORKSPACE}/Artifacts") {
           sh 'git clean -f -d -x'
         }
 
@@ -22,13 +26,13 @@ pipeline {
         echo "Output path: ${UNITY_OUTPUT_PATH}"
         echo "Workspace path: ${WORKSPACE}"
         sh "${UNITY_PATH} \
-                                                                        -projectPath ${UNITY_PROJECT_DIR} \
-                                                                        -buildTarget ${BUILD_TARGET}\
-                                                                        -executeMethod ${UNITY_BUILD_METHOD} \
-                                                                        -logFile - \
-                                                                        -quit -batchmode -nographics \
-                                                                        -outputPath ${UNITY_OUTPUT_PATH} \
-                                                                        -defineSymbolConfig ${SYMBOL_CONFIG}"
+        -projectPath ${UNITY_PROJECT_DIR} \
+        -buildTarget ${BUILD_TARGET}\
+        -executeMethod ${UNITY_BUILD_METHOD} \
+        -logFile - \
+        -quit -batchmode -nographics \
+        -outputPath ${UNITY_OUTPUT_PATH} \
+        -defineSymbolConfig ${SYMBOL_CONFIG}"
       }
     }
 
