@@ -11,17 +11,29 @@ pipeline {
       }
     }
 
-    stage('Build Win x64') {
-      environment {
-        SYMBOL_CONFIG = 'Release'
-        BUILD_TARGET = 'Win64'
-      }
-      steps {
-        echo "Build ${SYMBOL_CONFIG} ${BUILD_TARGET} with Unity (${UNITY_PATH})"
-        echo "Project path: ${UNITY_PROJECT_DIR}"
-        echo "Output path: ${UNITY_OUTPUT_PATH}"
-        echo "Workspace path: ${WORKSPACE}"
-        sh "${UNITY_PATH} -projectPath ${UNITY_PROJECT_DIR} -buildTarget ${BUILD_TARGET} -executeMethod ${UNITY_BUILD_METHOD} -logFile - -quit -batchmode -nographics -outputPath ${UNITY_OUTPUT_PATH} -defineSymbolConfig ${SYMBOL_CONFIG}"
+    stage('Build & Analyze') {
+      parallel {
+        stage('Build Win x64') {
+          environment {
+            SYMBOL_CONFIG = 'Release'
+            BUILD_TARGET = 'Win64'
+          }
+          steps {
+            echo "Build ${SYMBOL_CONFIG} ${BUILD_TARGET} with Unity (${UNITY_PATH})"
+            echo "Project path: ${UNITY_PROJECT_DIR}"
+            echo "Output path: ${UNITY_OUTPUT_PATH}"
+            echo "Workspace path: ${WORKSPACE}"
+            sh "${UNITY_PATH} -projectPath ${UNITY_PROJECT_DIR} -buildTarget ${BUILD_TARGET} -executeMethod ${UNITY_BUILD_METHOD} -logFile - -quit -batchmode -nographics -outputPath ${UNITY_OUTPUT_PATH} -defineSymbolConfig ${SYMBOL_CONFIG}"
+          }
+        }
+
+        stage('Analyze CPD') {
+          steps {
+            sh "cpd.bat --minimum-tokens 50 --language cs --failOnViolation false --format xml --files ${WORK_SPACE}/Assets/CliffLeeCL/Script > ${OUTPUT_PATH}/Analysis/cpd.xml"
+            recordIssues(enabledForFailure: true, tool: cpd(pattern: "${OUTPUT_PATH}/**/cpd.xml"))
+          }
+        }
+
       }
     }
 
