@@ -31,10 +31,13 @@ pipeline {
         stage('Analyze CPD') {
           environment {
             CPD_PATH = 'C:/CliffLeeCL/CodeAnalysis/pmd-bin-6.35.0/bin/cpd.bat'
+            MINIMUM_TOKENS = '50'
+            ANALYZE_PATH = "${WORK_SPACE}/Assets/CliffLeeCL/Script"
+            REPORT_PATH = "${OUTPUT_PATH}/Analysis/cpd.xml"
           }
           steps {
             sh "mkdir -p ${OUTPUT_PATH}/Analysis"
-            sh "${CPD_PATH} --minimum-tokens 50 --language cs --failOnViolation false --format xml --files ${WORK_SPACE}/Assets/CliffLeeCL/Script > ${OUTPUT_PATH}/Analysis/cpd.xml"
+            sh "${CPD_PATH} --minimum-tokens ${MINIMUM_TOKENS} --language cs --failOnViolation false --format xml --files ${ANALYZE_PATH} > ${REPORT_PATH}"
             recordIssues(enabledForFailure: true, tool: cpd(pattern: '**/cpd.xml'))
           }
         }
