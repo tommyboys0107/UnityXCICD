@@ -29,6 +29,7 @@ pipeline {
 
         stage('Analyze CPD') {
           steps {
+            sh "mkdir -p ${UNITY_OUTPUT_PATH}/Analysis"
             sh "cpd.bat --minimum-tokens 50 --language cs --failOnViolation false --format xml --files ${WORK_SPACE}/Assets/CliffLeeCL/Script > ${UNITY_OUTPUT_PATH}/Analysis/cpd.xml"
             recordIssues(enabledForFailure: true, tool: cpd(pattern: "${OUTPUT_PATH}/**/cpd.xml"))
           }
