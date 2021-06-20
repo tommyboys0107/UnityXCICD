@@ -17,7 +17,7 @@ namespace CliffLeeCL
         public static void BuildProject()
         {
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-            BuildSetting buildSetting = new BuildSetting();
+            BuildSetting buildSetting = new BuildSetting("", BuildSetting.DefineSymbolConfig.Debug);
 
             // Handle command line arguments.
             if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
@@ -35,13 +35,13 @@ namespace CliffLeeCL
         [MenuItem("Cliff Lee CL/Build project Windowsx64 _F6", false, 1)]
         public static void BuildProjectWindows64()
         {
-            BuildProject(BuildTarget.StandaloneWindows64, new BuildSetting());
+            BuildProject(BuildTarget.StandaloneWindows64, new BuildSetting("", BuildSetting.DefineSymbolConfig.Release));
         }
 
         [MenuItem("Cliff Lee CL/Build project WebGL _F7", false, 2)]
         public static void BuildProjectWebGL()
         {
-            BuildProject(BuildTarget.WebGL, new BuildSetting());
+            BuildProject(BuildTarget.WebGL, new BuildSetting("", BuildSetting.DefineSymbolConfig.Debug));
         }
 
         /// <summary>
@@ -57,8 +57,12 @@ namespace CliffLeeCL
                 scenes = EditorBuildSettings.scenes.Where((s) => s.enabled).Select((s) => s.path).ToArray(),
                 locationPathName = GetBuildPath(buildTarget, buildSetting.outputPath),
                 target = buildTarget,
-                options = BuildOptions.None
+                options = BuildOptions.None,
             };
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(
+                BuildPipeline.GetBuildTargetGroup(buildTarget),
+                BuildSetting.symbolConfigToDefineSymbol[buildSetting.symbolConfig]
+                );
 
             buildReport = BuildPipeline.BuildPlayer(buildPlayerOption);
             if (buildReport.summary.result == BuildResult.Succeeded)
@@ -150,13 +154,19 @@ namespace CliffLeeCL
             Release
         }
 
-        public readonly Dictionary<DefineSymbolConfig, string> symbolConfigToDefineSymbol = new Dictionary<DefineSymbolConfig, string> { 
+        public static readonly Dictionary<DefineSymbolConfig, string> symbolConfigToDefineSymbol = new Dictionary<DefineSymbolConfig, string> { 
             [DefineSymbolConfig.Debug] = "Debug;",
             [DefineSymbolConfig.Release] = "Release;"
         };
 
         public string outputPath = "";
         public DefineSymbolConfig symbolConfig = DefineSymbolConfig.Debug;
+
+        public BuildSetting(string outputPath, DefineSymbolConfig symbolConfig)
+        {
+            this.outputPath = outputPath;
+            this.symbolConfig = symbolConfig;
+        }
 
         public override string ToString()
         {
