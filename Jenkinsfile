@@ -20,7 +20,7 @@ pipeline {
         echo "Run ${TEST_PLATFORM} tests with Unity (${UNITY_PATH})"
         echo "Project path: ${UNITY_PROJECT_DIR}"
         echo "Report path: ${REPORT_PATH}"
-        sh "${UNITY_PATH} -runTests -testPlatform ${TEST_PLATFORM} -projectPath ${UNITY_PROJECT_DIR} -testResults ${REPORT_PATH} -logFile - -quit -batchmode -nographics"
+        sh "${UNITY_PATH} -runTests -testPlatform ${TEST_PLATFORM} -projectPath ${UNITY_PROJECT_DIR} -testResults ${REPORT_PATH} -logFile - -batchmode -nographics"
       }
     }
 
