@@ -42,12 +42,12 @@ public class TestExample
     [TestCase(5, 8)]
     public void TestTestCase(int x, int y)
     {
-        Assert.That(x, Is.GreaterThan(11));
-        Assert.That(y, Is.LessThanOrEqualTo(5));
+        Assert.That(x, Is.GreaterThan(4));
+        Assert.That(y, Is.LessThanOrEqualTo(8));
     }
 
     [Test]
-    [TestCase(12, 3, ExpectedResult = 16)]
+    [TestCase(12, 3, ExpectedResult = 15)]
     [TestCase(5, 8, ExpectedResult = 13)]
     public int TestTestCaseWithExpectedResult(int x, int y)
     {
