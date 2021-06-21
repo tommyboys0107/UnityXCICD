@@ -81,7 +81,7 @@ namespace CliffLeeCL
             PlayerSettings.SetScriptingDefineSymbolsForGroup(
                 BuildPipeline.GetBuildTargetGroup(buildTarget), defineSymbolBeforeBuild);
             AssetDatabase.SaveAssets();
-            Debug.Lo(buildSetting);
+            Debug.Log(buildSetting);
             Debug.Log("Build project at: " + buildPlayerOption.locationPathName);
         }
 
