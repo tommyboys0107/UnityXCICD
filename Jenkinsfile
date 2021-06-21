@@ -21,6 +21,7 @@ pipeline {
         echo "Project path: ${UNITY_PROJECT_DIR}"
         echo "Report path: ${REPORT_PATH}"
         sh "${UNITY_PATH} -runTests -testPlatform ${TEST_PLATFORM} -projectPath ${UNITY_PROJECT_DIR} -testResults ${REPORT_PATH} -logFile - -batchmode -nographics"
+        nunit(testResultsPattern: '**/editmode.xml')
       }
     }
 
