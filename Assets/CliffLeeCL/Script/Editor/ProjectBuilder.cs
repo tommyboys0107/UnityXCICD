@@ -17,7 +17,7 @@ namespace CliffLeeCL
         public static void BuildProject()
         {
             BuildTarget target = EditorUserBuildSettings.activeBuildTarget;
-            BuildSetting buildSetting = new BuildSetting("", BuildSetting.DefineSymbolConfig.Debug);
+            BuildSetting buildSetting = new BuildSetting("", BuildSetting.DefineSymbolConfig.Release);
 
             // Handle command line arguments.
             if (UnityEditorInternal.InternalEditorUtility.inBatchMode)
@@ -52,6 +52,7 @@ namespace CliffLeeCL
         static void BuildProject(BuildTarget buildTarget, BuildSetting buildSetting)
         {
             BuildReport buildReport;
+            string defineSymbolBeforeBuild = PlayerSettings.GetScriptingDefineSymbolsForGroup(BuildPipeline.GetBuildTargetGroup(buildTarget));
             BuildPlayerOptions buildPlayerOption = new BuildPlayerOptions
             {
                 scenes = EditorBuildSettings.scenes.Where((s) => s.enabled).Select((s) => s.path).ToArray(),
@@ -77,6 +78,9 @@ namespace CliffLeeCL
                     EditorApplication.Exit(1);
                 throw new Exception("[ProjectBuilder] Build Failed: Time:" + buildReport.summary.totalTime + " Total Errors:" + buildReport.summary.totalErrors);
             }
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(
+                BuildPipeline.GetBuildTargetGroup(buildTarget), defineSymbolBeforeBuild);
+            AssetDatabase.SaveAssets();
             Debug.Log(buildSetting);
             Debug.Log("Build project at: " + buildPlayerOption.locationPathName);
         }
