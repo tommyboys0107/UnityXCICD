@@ -8,7 +8,8 @@ pipeline {
           sh 'git clean -f -d -x -e /[Ll]ibrary/'
         }
 
-        sh "curl -X POST https://api.telegram.org/bot1855218882:AAFEU12iq4wTzG-2FsiH6QkVgoFb4dE6jmA/sendMessage -d parse_mode=markdown -d text=\"Build pipeline starts! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
+        sh "curl -X POST https://api.telegram.org/bot1855218882:AAFEU12iq4wTzG-2FsiH6QkVgoFb4dE6jmA/sendMessage -d parse_mode=markdown -d chat_id=987110561 -d text=\"Build pipeline starts! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
+        telegramSend(message: "Build pipeline starts! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))", chatId: 987110561)
       }
     }
 
@@ -74,15 +75,15 @@ pipeline {
   }
   post {
     success {
-      sh "curl -X POST https://api.telegram.org/bot1855218882:AAFEU12iq4wTzG-2FsiH6QkVgoFb4dE6jmA/sendMessage -d parse_mode=markdown -d text=\"Build pipeline ends successfully! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
+      sh "curl -X POST https://api.telegram.org/bot1855218882:AAFEU12iq4wTzG-2FsiH6QkVgoFb4dE6jmA/sendMessage -d parse_mode=markdown -d chat_id=987110561 -d text=\"Build pipeline ends successfully! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
     }
 
     aborted {
-      sh "curl -X POST https://api.telegram.org/bot1855218882:AAFEU12iq4wTzG-2FsiH6QkVgoFb4dE6jmA/sendMessage -d parse_mode=markdown -d text=\"Build pipeline aborted! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
+      sh "curl -X POST https://api.telegram.org/bot1855218882:AAFEU12iq4wTzG-2FsiH6QkVgoFb4dE6jmA/sendMessage -d parse_mode=markdown -d chat_id=987110561 -d text=\"Build pipeline aborted! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
     }
 
     failure {
-      sh "curl -X POST https://api.telegram.org/bot1855218882:AAFEU12iq4wTzG-2FsiH6QkVgoFb4dE6jmA/sendMessage -d parse_mode=markdown -d text=\"Build pipeline failed! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
+      sh "curl -X POST https://api.telegram.org/bot1855218882:AAFEU12iq4wTzG-2FsiH6QkVgoFb4dE6jmA/sendMessage -d parse_mode=markdown -d chat_id=987110561 -d text=\"Build pipeline failed! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
     }
 
   }
