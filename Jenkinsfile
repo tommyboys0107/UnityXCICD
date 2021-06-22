@@ -8,6 +8,7 @@ pipeline {
           sh 'git clean -f -d -x -e /[Ll]ibrary/'
         }
 
+        telegramSend "Build pipeline starts! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))"
       }
     }
 
@@ -70,5 +71,19 @@ pipeline {
     OUTPUT_PATH = "${WORK_SPACE}/Artifacts"
     UNITY_PATH = '"C:/Program Files/Unity/Hub/Editor/2020.3.11f1/Editor/Unity.exe"'
     UNITY_PROJECT_DIR = "${WORK_SPACE}"
+  }
+  post {
+    success {
+      telegramSend "Build pipeline ends successfully! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))"
+    }
+
+    aborted {
+      telegramSend "Build pipeline aborted! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))"
+    }
+
+    failure {
+      telegramSend "Build pipeline failed! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))"
+    }
+
   }
 }
