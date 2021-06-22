@@ -11,6 +11,20 @@ pipeline {
       }
     }
 
+    stage('Test') {
+      environment {
+        TEST_PLATFORM = 'EditMode'
+        REPORT_PATH = "${OUTPUT_PATH}/Test/editmode.xml"
+      }
+      steps {
+        echo "Run ${TEST_PLATFORM} tests with Unity (${UNITY_PATH})"
+        echo "Project path: ${UNITY_PROJECT_DIR}"
+        echo "Report path: ${REPORT_PATH}"
+        sh "${UNITY_PATH} -runTests -testPlatform ${TEST_PLATFORM} -projectPath ${UNITY_PROJECT_DIR} -testResults ${REPORT_PATH} -logFile - -batchmode -nographics"
+        nunit(testResultsPattern: '**/editmode.xml')
+      }
+    }
+
     stage('Build & Analyze') {
       parallel {
         stage('Build Win x64') {
@@ -23,7 +37,6 @@ pipeline {
             echo "Build ${SYMBOL_CONFIG} ${BUILD_TARGET} with Unity (${UNITY_PATH})"
             echo "Project path: ${UNITY_PROJECT_DIR}"
             echo "Output path: ${OUTPUT_PATH}"
-            echo "Workspace path: ${WORK_SPACE}"
             sh "${UNITY_PATH} -projectPath ${UNITY_PROJECT_DIR} -buildTarget ${BUILD_TARGET} -executeMethod ${UNITY_BUILD_METHOD} -logFile - -quit -batchmode -nographics -outputPath ${OUTPUT_PATH} -defineSymbolConfig ${SYMBOL_CONFIG}"
           }
         }
