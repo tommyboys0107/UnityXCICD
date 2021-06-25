@@ -94,4 +94,7 @@ pipeline {
     }
 
   }
+  triggers {
+    pollSCM('H H(0-5) * * *')
+  }
 }
