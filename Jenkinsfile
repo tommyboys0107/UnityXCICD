@@ -78,6 +78,10 @@ pipeline {
       sh 'curl -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage -d parse_mode=markdown -d chat_id=987110561 -d text='+"\"Build pipeline ends successfully! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
     }
 
+    unstable {
+      sh 'curl -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage -d parse_mode=markdown -d chat_id=987110561 -d text='+"\"Build pipeline ends but it's unstable! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
+    }
+
     aborted {
       sh 'curl -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage -d parse_mode=markdown -d chat_id=987110561 -d text='+"\"Build pipeline aborted! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
     }
