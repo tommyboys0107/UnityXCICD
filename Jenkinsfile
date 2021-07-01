@@ -12,7 +12,7 @@ pipeline {
       }
     }
 
-    stage('Build Win x64') {
+    stage('Build') {
       environment {
         SYMBOL_CONFIG = 'Release'
         BUILD_TARGET = 'Win64'
