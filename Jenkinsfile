@@ -8,27 +8,6 @@ pipeline {
           sh 'git clean -f -d -x -e /[Ll]ibrary/'
         }
 
-        sh 'curl -X POST https://api.telegram.org/bot$TELEGRAM_BOT_TOKEN/sendMessage -d parse_mode=markdown -d chat_id=987110561 -d text='+"\"Build pipeline starts! - *${JOB_NAME} #${BUILD_NUMBER}* - ([Go to Jenkins](${BUILD_URL}))\""
-      }
-    }
-
-    stage('Build') {
-      environment {
-        SYMBOL_CONFIG = 'Release'
-        BUILD_TARGET = 'Win64'
-        UNITY_BUILD_METHOD = 'CliffLeeCL.ProjectBuilder.BuildProject'
-      }
-      steps {
-        echo "Build ${SYMBOL_CONFIG} ${BUILD_TARGET} with Unity (${UNITY_PATH})"
-        echo "Project path: ${UNITY_PROJECT_DIR}"
-        echo "Output path: ${OUTPUT_PATH}"
-        sh "${UNITY_PATH} -projectPath ${UNITY_PROJECT_DIR} -buildTarget ${BUILD_TARGET} -executeMethod ${UNITY_BUILD_METHOD} -logFile - -quit -batchmode -nographics -outputPath ${OUTPUT_PATH} -defineSymbolConfig ${SYMBOL_CONFIG}"
-      }
-    }
-
-    stage('Deploy') {
-      steps {
-        archiveArtifacts 'Artifacts/**'
       }
     }
 
