@@ -28,6 +28,12 @@ pipeline {
       }
     }
 
+    stage('Deploy') {
+      steps {
+        archiveArtifacts 'Artifacts/**'
+      }
+    }
+
   }
   environment {
     WORK_SPACE = "${WORKSPACE}".replace("\\", "/")
