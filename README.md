@@ -10,8 +10,8 @@
 此專案是我為2021 TGDF 的議程《別再讓出版本綁架你的時間！CI & CD - Unity X Jenkins》所製作，主要是使用 Jenkins automation server 搭配 Unity 遊戲引擎製作最小可行 CI 流程，Repository 中包含之前曾製作過的《打擊感實驗室》Unity 專案，以及 Jenkins pipeline script - Jenkinsfile，在 Jenkins 中可以直接以這個專案學習 CI 流程的串接與 pipeline script 寫法。
 
 # 議程影片連結
-目前可在 Twitch TGDF_Official 直播存檔上看到
-https://cliffleeclstudio.pse.is/3gaccj
+目前可在 IGDATaiwan YouTube 上看到
+https://www.youtube.com/watch?v=G-ri4fHKFo8
 
 # 投影片連結
 https://cliffleeclstudio.pse.is/3htpqg
