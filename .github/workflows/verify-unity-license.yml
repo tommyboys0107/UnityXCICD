@@ -1,0 +1,18 @@
+name: Verify Unity License
+
+on: workflow_dispatch
+
+jobs:
+  verify-license:
+    name: Verify license
+    runs-on: ubuntu-latest
+    steps:
+        - name: Activate license
+          uses: game-ci/unity-activate@v2.0.0
+          env:
+            UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+            UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+            UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        - name: Return license
+          uses: game-ci/unity-return-license@v2.0.0
+          if: always()
