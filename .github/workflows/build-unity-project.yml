@@ -7,6 +7,8 @@ jobs:
     name: Build Unity Project
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Build Unity Windows 64-bit
         uses: game-ci/unity-builder@v4
         env:
