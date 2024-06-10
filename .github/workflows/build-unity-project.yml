@@ -17,3 +17,8 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: StandaloneWindows64
+      - name: Upload Unity Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: Build
+          path: build
