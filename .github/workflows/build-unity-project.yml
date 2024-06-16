@@ -3,11 +3,10 @@ name: Build Unity Project
 on: [push, workflow_dispatch]
 
 jobs:
-  build-unity-project:
+  build-unity-project-standalone:
     strategy:
-      fail-fast: false
       matrix:
-        targetPlatform: [WebGL, StandaloneWindows64, StandaloneOSX, StandaloneLinux64]
+        targetPlatform: [StandaloneWindows64, StandaloneOSX, StandaloneLinux64]
     name: Build Unity Project ${{ matrix.targetPlatform }}
     runs-on: ubuntu-latest
     steps:
@@ -35,14 +34,42 @@ jobs:
         with:
           name: GameFeelLab-${{ matrix.targetPlatform }}
           path: artifacts
+
+  build-unity-project-webgl:
+    name: Build Unity Project WebGL
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-GameFeelLab-WebGL
+          restore-keys: |
+            Library-GameFeelLab-
+            Library-
+      - name: Build Unity
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: WebGL
+          buildMethod: CliffLeeCL.ProjectBuilder.BuildProject
+          customParameters: -outputPath artifacts -defineSymbolConfig Debug
+      - name: Upload Unity Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: GameFeelLab-WebGL
+          path: artifacts
       - name: Upload GitHub Pages Artifact
-        if: matrix.targetPlatform == 'WebGL'
         uses: actions/upload-pages-artifact@v3.0.1
         with:
           path: artifacts/UnityXCICD-WebGL
   
   deploy-github-pages:
-    needs: build-unity-project
+    needs: build-unity-project-webgl
     name: Deploy to GitHub Pages
     permissions:
       pages: write
