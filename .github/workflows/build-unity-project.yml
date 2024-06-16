@@ -24,15 +24,17 @@ jobs:
           UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
         with:
           targetPlatform: WebGL
+          buildMethod: CliffLeeCL.ProjectBuilder.BuildProject
+          customParameters: -outputPath artifacts -defineSymbolConfig Debug
       - name: Upload Unity Artifact
         uses: actions/upload-artifact@v3
         with:
           name: GameFeelLab-WebGL
-          path: build
+          path: artifacts
       - name: Upload GitHub Pages Artifact
         uses: actions/upload-pages-artifact@v3.0.1
         with:
-          path: build/WebGL/WebGL
+          path: artifacts/UnityXCICD-WebGL/WebGL
   
   deploy-github-pages:
     needs: build-unity-project
