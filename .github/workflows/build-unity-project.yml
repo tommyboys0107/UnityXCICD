@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: Library
           key: Library-GameFeelLab-${{ matrix.targetPlatform }}
@@ -30,7 +30,7 @@ jobs:
           buildMethod: CliffLeeCL.ProjectBuilder.BuildProject
           customParameters: -outputPath artifacts -defineSymbolConfig Debug
       - name: Upload Unity Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: GameFeelLab-${{ matrix.targetPlatform }}
           path: artifacts
@@ -41,7 +41,7 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      - uses: actions/cache@v3
+      - uses: actions/cache@v4
         with:
           path: Library
           key: Library-GameFeelLab-WebGL
@@ -59,12 +59,12 @@ jobs:
           buildMethod: CliffLeeCL.ProjectBuilder.BuildProject
           customParameters: -outputPath artifacts -defineSymbolConfig Debug
       - name: Upload Unity Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: GameFeelLab-WebGL
           path: artifacts
       - name: Upload GitHub Pages Artifact
-        uses: actions/upload-pages-artifact@v3.0.1
+        uses: actions/upload-pages-artifact@v3
         with:
           path: artifacts/UnityXCICD-WebGL
   
@@ -81,4 +81,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4.0.5
+        uses: actions/deploy-pages@v4
