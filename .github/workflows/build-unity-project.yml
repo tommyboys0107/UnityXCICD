@@ -29,3 +29,22 @@ jobs:
         with:
           name: GameFeelLab-WebGL
           path: build
+      - name: Upload GitHub Pages Artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: build
+  
+  deploy-github-pages:
+    needs: build-unity-project
+    name: Deploy to GitHub Pages
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
