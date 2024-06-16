@@ -1,0 +1,50 @@
+name: Build Unity Project
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build-unity-project:
+    name: Build Unity Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - uses: actions/cache@v3
+        with:
+          path: Library
+          key: Library-GameFeelLab-WebGL
+          restore-keys: |
+            Library-GameFeelLab-
+            Library-
+      - name: Build Unity WebGL
+        uses: game-ci/unity-builder@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          targetPlatform: WebGL
+      - name: Upload Unity Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: GameFeelLab-WebGL
+          path: build
+      - name: Upload GitHub Pages Artifact
+        uses: actions/upload-pages-artifact@v3.0.1
+        with:
+          path: build/WebGL/WebGL
+  
+  deploy-github-pages:
+    needs: build-unity-project
+    name: Deploy to GitHub Pages
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4.0.5
