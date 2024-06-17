@@ -1,7 +1,5 @@
 name: Unity Workflow
 
-run-name: Unity Workflow (${{ inputs.symbolConfig}})
-
 on:
   push:
   workflow_dispatch:
@@ -9,10 +7,14 @@ on:
       symbolConfig:
         description: 'Define symbol configuration'
         type: choice
+        required: true
         default: 'Debug'
         options:
           - Debug
           - Release
+
+env:
+  SYMBOL_CONFIG: ${{ inputs.symbolConfig || 'Debug' }}
 
 jobs:
   test-unity-project:
@@ -62,7 +64,7 @@ jobs:
         with:
           targetPlatform: ${{ matrix.targetPlatform }}
           buildMethod: CliffLeeCL.ProjectBuilder.BuildProject
-          customParameters: -outputPath artifacts -defineSymbolConfig Debug
+          customParameters: -outputPath artifacts -defineSymbolConfig ${{ env.SYMBOL_CONFIG }}
       - name: Upload Unity Artifact
         uses: actions/upload-artifact@v4
         with:
@@ -91,7 +93,7 @@ jobs:
         with:
           targetPlatform: WebGL
           buildMethod: CliffLeeCL.ProjectBuilder.BuildProject
-          customParameters: -outputPath artifacts -defineSymbolConfig ${{ inputs.symbolConfig }}
+          customParameters: -outputPath artifacts -defineSymbolConfig ${{ env.SYMBOL_CONFIG }}
       - name: Upload Unity Artifact
         uses: actions/upload-artifact@v4
         with:
