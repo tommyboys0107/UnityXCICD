@@ -1,8 +1,30 @@
-name: Build Unity Project
+name: Unity Workflow
 
-on: [workflow_dispatch]
+on: [push, workflow_dispatch]
 
 jobs:
+  test-unity-project:
+    name: Test Unity Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: Library
+          key: Library-GameFeelLab-WebGL
+          restore-keys: |
+            Library-GameFeelLab-
+            Library-
+      - name: Test Unity Project
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+        with:
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
+
   build-unity-project-standalone:
     strategy:
       matrix:
@@ -67,3 +89,18 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: artifacts/UnityXCICD-WebGL
+  
+  deploy-github-pages:
+    needs: build-unity-project-webgl
+    name: Deploy to GitHub Pages
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
