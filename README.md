@@ -1,3 +1,4 @@
+[![Build Unity Project](https://github.com/tommyboys0107/UnityXCICD/actions/workflows/build-unity-project.yml/badge.svg?branch=main)](https://github.com/tommyboys0107/UnityXCICD/actions/workflows/build-unity-project.yml)
 # 目錄
 - [簡介](#簡介)
 - [議程影片連結](#議程影片連結)
