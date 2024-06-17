@@ -3,6 +3,25 @@ name: Build Unity Project
 on: [push, workflow_dispatch]
 
 jobs:
+  test-unity-project:
+    name: Test Unity Project
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Test Unity Project
+        uses: game-ci/unity-test-runner@v4
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+          UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+          UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+      - name: Upload Unity Test Result
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: Test result
+          path: artifacts
+
   build-unity-project-standalone:
     strategy:
       matrix:
