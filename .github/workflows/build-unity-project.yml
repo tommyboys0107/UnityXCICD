@@ -63,7 +63,3 @@ jobs:
         with:
           name: GameFeelLab-WebGL
           path: artifacts
-      - name: Upload GitHub Pages Artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: artifacts/UnityXCICD-WebGL
