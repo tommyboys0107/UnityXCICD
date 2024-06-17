@@ -87,10 +87,11 @@ namespace CliffLeeCL
         private static string GetBuildPath(BuildTarget buildTarget, string outputPath = "")
         {
             var desktopPath = Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
+            var fileExtension = GetFileExtension(buildTarget);
             string buildPath;
 
             outputPath = (outputPath == "") ? desktopPath : outputPath;
-            buildPath = Path.Combine(outputPath, $"{PlayerSettings.productName}-{buildTarget}");
+            buildPath = Path.Combine(outputPath, $"{PlayerSettings.productName}{fileExtension}");
             buildPath = buildPath.Replace(@"\", @"\\");
 
             return buildPath;
@@ -116,6 +117,29 @@ namespace CliffLeeCL
             }
 
             return commandLineArgToValue;
+        }
+        
+        /// <summary>
+        /// Return file extension according to build target.
+        /// </summary>
+        /// <param name="target">The build target.</param>
+        /// <returns>file extension string.</returns>
+        private static string GetFileExtension(BuildTarget target)
+        {
+            switch (target)
+            {
+                case BuildTarget.StandaloneWindows:
+                case BuildTarget.StandaloneWindows64:
+                    return ".exe";
+                case BuildTarget.StandaloneOSX:
+                    return ".app";
+                case BuildTarget.StandaloneLinux64:
+                    return ".x86_64";
+                case BuildTarget.Android:
+                    return EditorUserBuildSettings.buildAppBundle ? ".aab" : ".apk";
+                default:
+                    return "";
+            }
         }
     }
 
