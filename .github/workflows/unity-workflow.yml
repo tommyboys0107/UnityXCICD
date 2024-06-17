@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Print Input Variables
-        run: echo "::notice SYMBOL_CONFIG=${{ env.SYMBOL_CONFIG }}"
+        run: echo "::notice::SYMBOL_CONFIG=${{ env.SYMBOL_CONFIG }}"
 
   test-unity-project:
     name: Test Unity Project
