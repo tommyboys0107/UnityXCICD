@@ -1,6 +1,6 @@
 name: Unity Minimum Viable CI/CD
 
-on: [push, workflow_dispatch]
+on: [workflow_dispatch]
 
 jobs:
   build-unity-project:
