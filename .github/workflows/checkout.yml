@@ -1,4 +1,4 @@
-name: Unity Minimum Viable CI/CD
+name: Checkout repository
 
 on: [workflow_dispatch]
 
