@@ -1,0 +1,15 @@
+name: Unity Minimum Viable CI/CD
+
+on: [push, workflow_dispatch]
+
+jobs:
+  build-unity-project:
+    name: Build Unity Project
+    runs-on: ubuntu-latest
+    steps:
+      - run: "echo branch: ${{ github.ref }}, repository: ${{ github.repository }}"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: List files in the repository
+        run: |
+          ls ${{ github.workspace }}
