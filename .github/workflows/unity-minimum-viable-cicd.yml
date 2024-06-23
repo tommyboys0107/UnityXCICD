@@ -1,4 +1,4 @@
-name: Unity Minimum Viable CI
+name: Unity Minimum Viable CI/CD
 
 on: [workflow_dispatch]
 
