@@ -12,7 +12,9 @@
     "allowUnsafeCode": false,
     "overrideReferences": true,
     "precompiledReferences": [
-        "nunit.framework.dll"
+        "nunit.framework.dll",
+        "Sirenix.OdinValidator.Editor.dll",
+        "Sirenix.OdinInspector.Editor.dll"
     ],
     "autoReferenced": false,
     "defineConstraints": [
