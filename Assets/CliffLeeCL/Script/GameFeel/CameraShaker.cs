@@ -1,7 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using Cinemachine;
+﻿using UnityEngine;
+using Unity.Cinemachine;
 
 public class CameraShaker : MonoBehaviour
 {
@@ -29,16 +27,16 @@ public class CameraShaker : MonoBehaviour
 
         if (canOverrideParam)
         {
-            perlinNoise.m_AmplitudeGain = overrideAmplitute;
-            perlinNoise.m_FrequencyGain = overrideFrequency;
+            perlinNoise.AmplitudeGain = overrideAmplitute;
+            perlinNoise.FrequencyGain = overrideFrequency;
             maxAmplitute = overrideAmplitute;
             maxDuration = overrideDuration;
             elapsedTime = overrideDuration;
         }
         else
         {
-            perlinNoise.m_AmplitudeGain = amplitute;
-            perlinNoise.m_FrequencyGain = frequency;
+            perlinNoise.AmplitudeGain = amplitute;
+            perlinNoise.FrequencyGain = frequency;
             maxAmplitute = amplitute;
             maxDuration = duration;
             elapsedTime = duration;
@@ -59,7 +57,7 @@ public class CameraShaker : MonoBehaviour
 
         virtualCamera = GetComponent<CinemachineVirtualCamera>();
         perlinNoise = virtualCamera.AddCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        perlinNoise.m_NoiseProfile = noiseProfile;
+        perlinNoise.NoiseProfile = noiseProfile;
         ResetToRest();
     }
 
@@ -67,7 +65,7 @@ public class CameraShaker : MonoBehaviour
     {
         if (elapsedTime >= 0.0f)
         {
-            perlinNoise.m_AmplitudeGain = maxAmplitute * (elapsedTime / maxDuration);
+            perlinNoise.AmplitudeGain = maxAmplitute * (elapsedTime / maxDuration);
             elapsedTime -= Time.deltaTime;
         }
         else
@@ -78,8 +76,8 @@ public class CameraShaker : MonoBehaviour
 
     private void ResetToRest()
     {
-        perlinNoise.m_AmplitudeGain = 0.0f;
-        perlinNoise.m_FrequencyGain = 0.0f;
+        perlinNoise.AmplitudeGain = 0.0f;
+        perlinNoise.FrequencyGain = 0.0f;
         elapsedTime = 0.0f;
     }
 }
