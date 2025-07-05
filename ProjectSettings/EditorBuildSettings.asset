@@ -8,4 +8,6 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scene/GameFeel.unity
     guid: f0b4b61000ebdf0428d8bef0f626d948
-  m_configObjects: {}
+  m_configObjects:
+    com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 2d9b39ef1f7a8f7499abd082f24653aa, type: 3}
+  m_UseUCBPForAssetBundles: 0

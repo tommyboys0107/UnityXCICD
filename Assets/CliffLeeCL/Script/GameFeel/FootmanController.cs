@@ -1,18 +1,11 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class FootmanController : MonoBehaviour
 {
-    /// <summary>
-    /// Define the name for input horizontal axis.
-    /// </summary>
-    public string horizontalAxisName = "Horizontal";
-    /// <summary>
-    /// Define the name for input vertical axis.
-    /// </summary>
-    public string verticalAxisName = "Vertical";
-
+    DefaultInputActions inputActions;
+    
     [Header("Player status")]
     public int healthPoint = 10;
     public int lightAttackDamage = 2;
@@ -26,30 +19,39 @@ public class FootmanController : MonoBehaviour
     /// </summary>
     public float angularSpeed = 20.0f;
 
-    [Header("FOV transition")]
-    /// <summary>
-    /// Define normal FOV of camera.
-    /// </summary>
-    public float normalFOV = 60.0f;
-    /// <summary>
-    /// Define FOV of camera when the player is sprinting.
-    /// </summary>
-    public float sprintFOV = 65.0f;
-    /// <summary>
-    /// Define the transition time between FOVs.
-    /// </summary>
-    public float FOVTransitionTime = 0.5f;
-
     FootmanAnimator footmanAnimator = null;
     Rigidbody rigid = null;
-    float inputHorizontal = 0.0f;
-    float inputVertical = 0.0f;
     Vector3 moveDirection = Vector3.zero;
 
     void Start()
     {
+        inputActions = new DefaultInputActions();
+        inputActions.Enable();
         footmanAnimator = gameObject.GetComponent<FootmanAnimator>();
         rigid = gameObject.GetComponent<Rigidbody>();
+        inputActions.Player.PrimaryAttack.performed += OnPrimaryAttacked;
+        inputActions.Player.SecondaryAttack.performed += OnSecondaryAttacked;
+    }
+
+    private void OnSecondaryAttacked(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            footmanAnimator.PerformHeavyAttack();
+        }
+    }
+
+    private void OnPrimaryAttacked(InputAction.CallbackContext context)
+    {
+        if (context.performed)
+        {
+            footmanAnimator.PerformLightAttack();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        inputActions.Disable();
     }
 
     void Update()
@@ -64,12 +66,10 @@ public class FootmanController : MonoBehaviour
 
     private void HandleInput()
     {
-        inputHorizontal = Input.GetAxis(horizontalAxisName);
-        inputVertical = Input.GetAxis(verticalAxisName);
-
         if (CanMove())
         {
-            Vector3 rawMoveDirection = new Vector3(inputHorizontal, 0.0f, inputVertical);
+            var inputMove = inputActions.Player.Move.ReadValue<Vector2>();
+            var rawMoveDirection = new Vector3(inputMove.x, 0.0f, inputMove.y);
 
             moveDirection = Vector3.ClampMagnitude(rawMoveDirection, 1.0f);
             footmanAnimator.UpdateVelocity(moveDirection.sqrMagnitude);
@@ -79,21 +79,11 @@ public class FootmanController : MonoBehaviour
             moveDirection = Vector3.zero;
             footmanAnimator.UpdateVelocity(0.0f);
         }
-
-        if (Input.GetButtonDown("Fire1"))
-        {
-            footmanAnimator.PerformLightAttack();
-        }
-        else if (Input.GetButtonDown("Fire2"))
-        {
-            footmanAnimator.PerformHeavyAttack();
-        }
     }
 
     private bool CanMove()
     {
-        return (!Mathf.Approximately(inputHorizontal, 0.0f) || !Mathf.Approximately(inputVertical, 0.0f))
-            && !footmanAnimator.IsInAnimationState("LightAttack") && !footmanAnimator.IsInAnimationState("HeavyAttack");
+        return !footmanAnimator.IsInAnimationState("LightAttack") && !footmanAnimator.IsInAnimationState("HeavyAttack");
     }
 
     private void UpdateMovement()
