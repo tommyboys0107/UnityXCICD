@@ -1,4 +1,4 @@
-﻿name: Qodana
+name: Qodana
 on:
   workflow_dispatch:
   pull_request:
